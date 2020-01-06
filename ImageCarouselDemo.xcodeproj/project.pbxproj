@@ -13,6 +13,9 @@
 		3921F7BD23C2BEED002A2136 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3921F7BC23C2BEED002A2136 /* Assets.xcassets */; };
 		3921F7C023C2BEED002A2136 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3921F7BE23C2BEED002A2136 /* LaunchScreen.storyboard */; };
 		3921F7CB23C2BEED002A2136 /* ImageCarouselDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3921F7CA23C2BEED002A2136 /* ImageCarouselDemoTests.swift */; };
+		3921F7D623C2C003002A2136 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3921F7D523C2C003002A2136 /* SecondViewController.swift */; };
+		3921F7D823C2C022002A2136 /* DemoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3921F7D723C2C022002A2136 /* DemoCollectionViewCell.swift */; };
+		3921F7DC23C2C059002A2136 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3921F7DB23C2C059002A2136 /* Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,9 @@
 		3921F7C623C2BEED002A2136 /* ImageCarouselDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageCarouselDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3921F7CA23C2BEED002A2136 /* ImageCarouselDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCarouselDemoTests.swift; sourceTree = "<group>"; };
 		3921F7CC23C2BEED002A2136 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3921F7D523C2C003002A2136 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		3921F7D723C2C022002A2136 /* DemoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCollectionViewCell.swift; sourceTree = "<group>"; };
+		3921F7DB23C2C059002A2136 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,9 +83,11 @@
 		3921F7B223C2BEE8002A2136 /* ImageCarouselDemo */ = {
 			isa = PBXGroup;
 			children = (
+				3921F7D923C2C035002A2136 /* ViewControllers */,
+				3921F7DA23C2C045002A2136 /* Views */,
+				3921F7DB23C2C059002A2136 /* Extension.swift */,
 				3921F7B323C2BEE8002A2136 /* AppDelegate.swift */,
 				3921F7B523C2BEE8002A2136 /* SceneDelegate.swift */,
-				3921F7B723C2BEE8002A2136 /* ViewController.swift */,
 				3921F7BC23C2BEED002A2136 /* Assets.xcassets */,
 				3921F7BE23C2BEED002A2136 /* LaunchScreen.storyboard */,
 				3921F7C123C2BEED002A2136 /* Info.plist */,
@@ -94,6 +102,23 @@
 				3921F7CC23C2BEED002A2136 /* Info.plist */,
 			);
 			path = ImageCarouselDemoTests;
+			sourceTree = "<group>";
+		};
+		3921F7D923C2C035002A2136 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				3921F7B723C2BEE8002A2136 /* ViewController.swift */,
+				3921F7D523C2C003002A2136 /* SecondViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		3921F7DA23C2C045002A2136 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3921F7D723C2C022002A2136 /* DemoCollectionViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,7 +221,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3921F7D623C2C003002A2136 /* SecondViewController.swift in Sources */,
+				3921F7D823C2C022002A2136 /* DemoCollectionViewCell.swift in Sources */,
 				3921F7B823C2BEE8002A2136 /* ViewController.swift in Sources */,
+				3921F7DC23C2C059002A2136 /* Extension.swift in Sources */,
 				3921F7B423C2BEE8002A2136 /* AppDelegate.swift in Sources */,
 				3921F7B623C2BEE8002A2136 /* SceneDelegate.swift in Sources */,
 			);
@@ -282,7 +310,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -336,7 +364,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
