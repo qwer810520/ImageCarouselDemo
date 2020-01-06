@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-  let demoInfo: [DemoColorType] = [.green, .red, .blue, .green, .red]
+  let demoInfo: [DemoColorType] = [.red, .blue, .green]
   
   private var autoScorllTimer: DispatchSourceTimer?
   var currentIndex = 1
@@ -73,7 +73,10 @@ class ViewController: UIViewController {
     setUpPageControl()
 
     collectionView.layoutIfNeeded()
-    collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
+    scrollToCenterItem()
+
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "滑到最大值", style: .plain, target: self, action: #selector(scrollToMaxItems))
+    navigationItem.leftBarButtonItem = UIBarButtonItem(title: "滑到最小值", style: .plain, target: self, action: #selector(scrollToMinItem))
 
     startAutoScrollTimer()
   }
@@ -106,7 +109,7 @@ class ViewController: UIViewController {
 
   private func setUpPageControl() {
     pageControl.currentPage = 0
-    pageControl.numberOfPages = demoInfo.count - 2
+    pageControl.numberOfPages = demoInfo.count
   }
 
   private func startAutoScrollTimer() {
@@ -128,27 +131,44 @@ class ViewController: UIViewController {
     autoScorllTimer = nil
   }
 
+  private func scrollToCenterItem(with gap: Int = 0) {
+    let count = collectionView.numberOfItems(inSection: 0)
+    currentIndex = count + gap
+    collectionView.scrollToItem(at: IndexPath(item: (count / 2) + gap, section: 0), at: .centeredHorizontally, animated: false)
+  }
+
+  private func getInfoIndex(with indexPath: IndexPath) -> Int {
+    switch indexPath.row % demoInfo.count {
+    case let x where x > 0 && x < demoInfo.count:
+        return x - 1
+    default:
+        return demoInfo.count - 1
+    }
+  }
+
   // MARK: - Action Methods
 
   @objc private func scrollCell() {
     print(Date(), " Start ------------------->")
     DispatchQueue.main.async { [weak self] in
-      guard let currentIndex = self?.currentIndex, let demoInfo = self?.demoInfo, let view = self?.view else { return }
-      switch currentIndex {
-        case let x where x >= demoInfo.count - 2:
-          self?.currentIndex = 1
-          self?.collectionView.scrollToItem(at: IndexPath(item: 4, section: 0), at: .centeredHorizontally, animated: true)
-          Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
-            self?.collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: false)
-        }
-        case let x where x >= 1 && x <= demoInfo.count - 2:
-          let index = currentIndex + 1
-          self?.currentIndex = index
-          self?.collectionView.scrollRectToVisible(CGRect(origin: CGPoint(x: view.bounds.width * CGFloat(index), y: 0), size: view.frame.size), animated: true)
-        default:
-          break
-      }
+      guard let currentIndex = self?.currentIndex, let view = self?.view else { return }
+      let index = currentIndex + 1
+      self?.currentIndex = index
+      self?.collectionView.scrollRectToVisible(CGRect(origin: CGPoint(x: view.bounds.width * CGFloat(index), y: 0), size: view.frame.size), animated: true)
     }
+  }
+
+  // MARK: - Test Methods
+
+  @objc private func scrollToMaxItems() {
+    let count = collectionView.numberOfItems(inSection: 0)
+    currentIndex = count
+    collectionView.scrollToItem(at: IndexPath(item: count, section: 0), at: .centeredHorizontally, animated: true)
+  }
+
+  @objc private func scrollToMinItem() {
+    currentIndex = 1
+    collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .centeredHorizontally, animated: true)
   }
 }
 
@@ -157,6 +177,7 @@ class ViewController: UIViewController {
 extension ViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let controller = SecondViewController()
+
     navigationController?.pushViewController(controller, animated: true)
   }
 
@@ -171,15 +192,13 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let screenWidth = view.bounds.width
-    let xPoint = (scrollView.contentOffset.x - screenWidth) / screenWidth
-    currentIndex = lround(Double(xPoint)) < 1 ? 1 : lround(Double(xPoint)) > demoInfo.count - 2 ? 3 : lround(Double(xPoint)) + 1
+    let xPoint = ((scrollView.contentOffset.x - screenWidth) / screenWidth).truncatingRemainder(dividingBy: CGFloat(demoInfo.count))
+    currentIndex = Int(scrollView.contentOffset.x / screenWidth)
     switch xPoint {
-      case let x where x > (CGFloat(demoInfo.count - 2) - 0.5):
-        pageControl.currentPage = 0
-      case let x where x < -0.5:
-        pageControl.currentPage = demoInfo.count - 2
-      default:
-        pageControl.currentPage = lround(Double(xPoint))
+    case let x where x > CGFloat(demoInfo.count) - 0.5:
+      pageControl.currentPage = 0
+    default:
+      pageControl.currentPage = lround(Double(xPoint))
     }
   }
 
@@ -187,14 +206,11 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     if !isBeginAutoScroll {
       isBeginAutoScroll = true
     }
-    let screenWidth = view.bounds.width
     switch scrollView.contentOffset.x {
-      case let x where x > (screenWidth * (CGFloat(demoInfo.count - 2) + 0.5)):
-        scrollView.contentOffset = CGPoint(x: screenWidth, y: 0)
-      case let x where x < screenWidth * 0.5:
-        scrollView.contentOffset = CGPoint(x: screenWidth * 3, y: 0)
-      default:
-        break
+      case let x where x >= scrollView.contentSize.width - scrollView.frame.width || x == 0:
+      scrollToCenterItem(with: x == 0 ? -1 : 0)
+    default:
+      break
     }
   }
 }
@@ -203,14 +219,16 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 extension ViewController: UICollectionViewDataSource {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return demoInfo.count
+    print(demoInfo.count * Int(Int16.max))
+    return demoInfo.count * Int(Int16.max)
   }
 
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DemoCollectionViewCell.identifier, for: indexPath) as? DemoCollectionViewCell else {
       fatalError("DemoCollectionViewCell init fail")
     }
-    cell.colorType = demoInfo[indexPath.row]
+
+    cell.colorType = demoInfo[getInfoIndex(with: indexPath)]
     return cell
   }
 }
