@@ -19,9 +19,9 @@ class ViewController: UIViewController {
     didSet {
       switch isBeginAutoScroll {
         case true:
-          cancelAutoScrollTimer()
-        case false:
           startAutoScrollTimer()
+        case false:
+          cancelAutoScrollTimer()
       }
     }
   }
@@ -165,8 +165,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
   }
 
   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    guard !isBeginAutoScroll else { return }
-    isBeginAutoScroll = true
+    guard isBeginAutoScroll else { return }
+    isBeginAutoScroll = false
   }
 
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -184,8 +184,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
   }
 
   func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-    if isBeginAutoScroll {
-      isBeginAutoScroll = false
+    if !isBeginAutoScroll {
+      isBeginAutoScroll = true
     }
     let screenWidth = view.bounds.width
     switch scrollView.contentOffset.x {
