@@ -177,7 +177,7 @@ class ViewController: UIViewController {
 extension ViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let controller = SecondViewController()
-
+    print("didSelectItem itemType: ", demoInfo[getInfoIndex(with: indexPath)])
     navigationController?.pushViewController(controller, animated: true)
   }
 
